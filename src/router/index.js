@@ -12,7 +12,7 @@ const router = createRouter({
         {
           path: '/home',
           name: '首页',
-          component: () => import('@/views/home.vue')
+          component: () => import('@/views/Home.vue')
         },
         {
           path: '/oddsModel',
