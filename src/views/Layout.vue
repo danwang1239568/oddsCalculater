@@ -60,7 +60,7 @@
   <el-row v-if="!isMobile">
     <el-col :span="4">
       <div>
-        <el-menu :default-active="'/calculate'" style="height: 100vh" router background-color="#bca" text-color="#fff"
+        <el-menu :default-active="'/home'" style="height: 100vh" router background-color="#bca" text-color="#fff"
           class="el-menu">
           <el-menu-item v-for="item in routeDate" :index="item.index">
             <span>{{ item.name }}</span>

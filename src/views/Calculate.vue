@@ -15,29 +15,29 @@
     else oddsList.value = [[1, 1, 1, 1], [1, 1]]
   }
   const start = async () => {
+    if (yidian.value > (kachi.value == 'character' ? 89 : 79) || yidian.value < 0) {
+      yidian.value = 0
+      kachi.value == 'character' ? alert('垫数需要在0~89之间') : alert('垫数需要在0~79之间')
+      return
+    }
     const loading = ElLoading.service({
       lock: true,
       text: '正在计算...若在简单计算时崩溃，您可稍加等待',
       background: 'rgba(0, 0, 0, 0.8)',
     })
-    if (yidian.value > 89 || yidian.value < 0) {
-      yidian.value = 0
-      alert('垫数需要在0~89之间')
-      return
-    }
-    if(mode.value || yitun.value >= 120){
+    if (mode.value && yitun.value >= 120) {
       ElMessage({
         message: '应该算不出来，计算量太大了',
         type: 'warning',
       })
-    }else if(mode.value || yitun.value >= 90){
+    } else if (mode.value && yitun.value >= 90) {
       ElMessage({
         message: '可能得等个五六分钟',
         type: 'warning',
       })
     }
-    setTimeout(async () => {
-      oddsList.value = await calcOddsList(yidian.value, yitun.value, kachi.value, baodi.value, mode.value)
+    setTimeout(() => {
+      oddsList.value = calcOddsList(yidian.value, yitun.value, kachi.value, baodi.value, mode.value)
       setTimeout(() => {
         loading.close()
         ElMessage({
@@ -45,7 +45,6 @@
           type: 'success',
         })
       }, 100)
-
     }, 100)
     // xianding1.value = calcXianding1(yidian.value, yitun.value, kachi.value, baodi.value)
 
@@ -68,7 +67,7 @@
       <el-select v-model="baodi" size="default" style="width: 100px">
         <el-option label="常驻" value="changzhu" />
         <el-option label="限定" value="xianding" />
-      </el-select>
+      </el-select>,
       <el-switch v-model="mode" @change="changeMode" size="large" active-text="复杂计算" inactive-text="简单计算" /><br>
       <el-button @click="start" type="primary">开始计算</el-button><br><br>
     </div>
