@@ -61,6 +61,10 @@
 <template>
   <div class="content">
     <p>由于官方并未明确具体的抽卡概率模型，这里使用的是民测的较为准确的模型，即：</p>
+    <p>参考：<br />
+      <a href=" https://b23.tv/StL8YLf">【用一千万抽，揭示原神抽卡系统全部细节-哔哩哔哩】</a><br />
+      <a href=" https://b23.tv/vJrvipZ">【《捕获明光》都带来了什么？新机制讲解、数据展示，顺便鉴赏《4连歪》案例-哔哩哔哩】</a>
+    </p>
     <el-tabs v-model="activeName" type="card" class="demo-tabs" @click="handleClick">
       <el-tab-pane label="限定角色祈愿" name="character">
         <p style="color: #cc8;font-weight:bold;">限定角色祈愿：</p>
