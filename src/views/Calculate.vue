@@ -19,9 +19,23 @@ const oddsStore = useOddsStore()
     else oddsList.value = [[1, 1, 1, 1], [1, 1]]
   }
 
+  function removeCircularReferences(obj) {
+    const seen = new WeakSet();
+    function replacer(key, value) {
+      if (typeof value === 'object' && value !== null) {
+        if (seen.has(value)) {
+          // 如果已经处理过这个对象，返回undefined，避免循环引用
+          return undefined;
+        }
+        seen.add(value);
+      }
+      return value;
+    }
+    return JSON.stringify(obj, replacer);
+  }
   let wk = new Worker('worker.js')
   wk.postMessage({
-    oddsStore: JSON.stringify(oddsStore),
+    oddsStore: removeCircularReferences(oddsStore),
     yidian: yidian.value,
     yitun: yitun.value,
     kachi: kachi.value,
@@ -58,7 +72,7 @@ const oddsStore = useOddsStore()
     }
     // oddsList.value = calcOddsList(yidian.value, yitun.value, kachi.value, baodi.value, mode.value)
     wk.postMessage({
-      oddsStore: JSON.stringify(oddsStore),
+      oddsStore: removeCircularReferences(oddsStore),
       yidian: yidian.value,
       yitun: yitun.value,
       kachi: kachi.value,

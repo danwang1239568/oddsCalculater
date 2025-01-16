@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# oddsCalculater
-=======
 # OddsAnalysis
 
 This template should help get you started developing with Vue 3 in Vite.
@@ -31,4 +28,3 @@ pnpm dev
 ```sh
 pnpm build
 ```
->>>>>>> d6f3f00 (v1.0.0，完成啦)
