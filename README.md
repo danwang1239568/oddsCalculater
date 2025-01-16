@@ -4,6 +4,7 @@
 # OddsAnalysis
 
 This template should help get you started developing with Vue 3 in Vite.
+这是原神的概率详细信息计算器，帮您更好地做抽卡规划
 
 ## Recommended IDE Setup
 
