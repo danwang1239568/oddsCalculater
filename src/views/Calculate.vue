@@ -1,6 +1,10 @@
 <script setup lang="ts">
   import { ref } from 'vue';
-  import { calcOddsList } from '@/utils/calcOdds.js'
+  // import { calcOddsList } from '@/utils/calcOdds.js'
+  import {
+  useOddsStore
+} from '@/stores';
+const oddsStore = useOddsStore()
 
   const centerDialogVisible = ref(true)
   const yidian = ref(0)
@@ -14,7 +18,18 @@
     if (mode.value) oddsList.value = [[1, 1, 1, 1, 1, 1], [1, 1, 1]]
     else oddsList.value = [[1, 1, 1, 1], [1, 1]]
   }
-  const start = async () => {
+
+  let wk = new Worker('worker.js')
+  wk.postMessage({
+    oddsStore: JSON.stringify(oddsStore),
+    yidian: yidian.value,
+    yitun: yitun.value,
+    kachi: kachi.value,
+    baodi: baodi.value,
+    mode: mode.value,
+    action: 'first'
+  })
+  const start = () => {
     if (yidian.value > (kachi.value == 'character' ? 89 : 79) || yidian.value < 0) {
       yidian.value = 0
       kachi.value == 'character' ? alert('垫数需要在0~89之间') : alert('垫数需要在0~79之间')
@@ -22,32 +37,44 @@
     }
     const loading = ElLoading.service({
       lock: true,
-      text: '正在计算...若在简单计算时崩溃，您可稍加等待',
+      text: '正在计算...',
       background: 'rgba(0, 0, 0, 0.8)',
     })
-    if (mode.value && yitun.value >= 120) {
+    if (mode.value && yitun.value >= 400) {
       ElMessage({
-        message: '应该算不出来，计算量太大了',
+        message: '计算量较大，可能比较慢',
         type: 'warning',
       })
-    } else if (mode.value && yitun.value >= 90) {
+    } else if (mode.value && yitun.value >= 200) {
       ElMessage({
         message: '可能得等个五六分钟',
         type: 'warning',
       })
+    } else if (mode.value && yitun.value >= 100) {
+      ElMessage({
+        message: '可能得等个一两分钟',
+        type: 'warning',
+      })
     }
-    setTimeout(() => {
-      oddsList.value = calcOddsList(yidian.value, yitun.value, kachi.value, baodi.value, mode.value)
-      setTimeout(() => {
-        loading.close()
-        ElMessage({
-          message: '计算成功！.',
-          type: 'success',
-        })
-      }, 100)
-    }, 100)
-    // xianding1.value = calcXianding1(yidian.value, yitun.value, kachi.value, baodi.value)
-
+    // oddsList.value = calcOddsList(yidian.value, yitun.value, kachi.value, baodi.value, mode.value)
+    wk.postMessage({
+      oddsStore: JSON.stringify(oddsStore),
+      yidian: yidian.value,
+      yitun: yitun.value,
+      kachi: kachi.value,
+      baodi: baodi.value,
+      mode: mode.value,
+      action: 'startCalc'
+    })
+    wk.onmessage = e => {
+      loading.close()
+      ElMessage({
+        message: '计算成功！.',
+        type: 'success',
+      })
+      const { oddsList1, oddsList2 } = e.data
+      oddsList.value = [oddsList1, oddsList2]
+    }
   }
 </script>
 
